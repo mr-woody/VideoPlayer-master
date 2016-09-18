@@ -141,7 +141,7 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
         super.onConfigurationChanged(newConfig);
         int screenWidth = PlayerUtils.getScreenWidth(activity);
         int screenHeight = PlayerUtils.getScreenHeight(activity);
-        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) getLayoutParams();
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) getLayoutParams();
 
         if(mOnScreenConfigurationListener!=null){
             mOnScreenConfigurationListener.onChanged(newConfig);
