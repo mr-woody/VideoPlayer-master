@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         viderPlayer.setIsNeedBatteryListen(true);
         viderPlayer.setIsNeedNetChangeListen(true);
         //第一次进来先设置数据
-        viderPlayer.setDataSource(url1, "测试视频地址");
+        viderPlayer.setDataSource(this,url1, "测试视频地址");
 /*
 
         //播放完成监听

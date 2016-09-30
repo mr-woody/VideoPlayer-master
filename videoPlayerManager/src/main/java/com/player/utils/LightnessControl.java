@@ -2,6 +2,7 @@ package com.player.utils;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.provider.Settings;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -36,8 +37,8 @@ public class LightnessControl {
         }
     }
 
-    // 获取亮度0~255
-    public static int GetLightness(Activity act) {
+    // 获取亮度0~255C
+   public static int GetLightness(Context act) {
         return Settings.System.getInt(act.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, -1);
     }
 

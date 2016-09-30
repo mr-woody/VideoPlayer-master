@@ -60,7 +60,6 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
 
     //地址
     private String videoPath;
-    private String videoThumb;
     private String videoTitle;
     private long video_position = 0;
 
@@ -115,7 +114,6 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
     public IjkViderPlayer(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
-        activity = (Activity) this.context;
         //自定义属性相关
         initAttrs(context, attrs);
         //其他
@@ -139,8 +137,8 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        int screenWidth = PlayerUtils.getScreenWidth(activity);
-        int screenHeight = PlayerUtils.getScreenHeight(activity);
+        int screenWidth = PlayerUtils.getScreenWidth(context);
+        int screenHeight = PlayerUtils.getScreenHeight(context);
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) getLayoutParams();
 
         if(mOnScreenConfigurationListener!=null){
@@ -151,7 +149,9 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
         //Configuration.ORIENTATION_PORTRAIT 表示竖向
         //Configuration.ORIENTATION_LANDSCAPE 表示横屏
         if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            if(activity!=null) {
+                activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            }
             //计算视频的大小16：9
             layoutParams.width = screenWidth;
             layoutParams.height = screenWidth * 9 / 16;
@@ -164,7 +164,9 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
             }
         }
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            if(activity!=null) {
+                activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            }
             layoutParams.width = screenWidth;
             layoutParams.height = screenHeight;
 
@@ -427,7 +429,9 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
     private void setLandscape() {
         isFullscreen = true;
         //设置横屏
-        ((Activity) context).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        if(activity!=null) {
+            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
         if (mn_rl_bottom_menu.getVisibility() == View.VISIBLE) {
             mn_rl_top_menu.setVisibility(View.VISIBLE);
         }
@@ -437,7 +441,9 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
     private void setProtrait() {
         isFullscreen = false;
         //设置竖屏
-        ((Activity) context).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        if(activity!=null) {
+            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
         mn_rl_top_menu.setVisibility(View.GONE);
         unLockScreen();
         initLock();
@@ -718,7 +724,7 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
             }
         } else {
             int intX = (int) e1.getX();
-            int screenWidth = PlayerUtils.getScreenWidth((Activity) context);
+            int screenWidth = PlayerUtils.getScreenWidth(context);
             if (intX > screenWidth / 2) {
                 FLAG = GESTURE_MODIFY_VOLUME;
             } else {
@@ -809,28 +815,40 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
                     .getStreamVolume(AudioManager.STREAM_MUSIC); // 获取当前值
             if (Math.abs(distanceY) > Math.abs(distanceX)) {// 纵向移动大于横向移动
                 // 亮度调大,注意横屏时的坐标体系,尽管左上角是原点，但横向向上滑动时distanceY为正
-                int mLight = LightnessControl.GetLightness((Activity) context);
+                int mLight = LightnessControl.GetLightness(context);
                 if (mLight >= 0 && mLight <= 255) {
                     if (distanceY >= PlayerUtils.dip2px(context, STEP_LIGHT)) {
                         if (mLight > 245) {
-                            LightnessControl.SetLightness((Activity) context, 255);
+                            if(activity!=null) {
+                                LightnessControl.SetLightness(activity, 255);
+                            }
                         } else {
-                            LightnessControl.SetLightness((Activity) context, mLight + 10);
+                            if(activity!=null) {
+                                LightnessControl.SetLightness(activity, mLight + 10);
+                            }
                         }
                     } else if (distanceY <= -PlayerUtils.dip2px(context, STEP_LIGHT)) {// 亮度调小
                         if (mLight < 10) {
-                            LightnessControl.SetLightness((Activity) context, 0);
+                            if(activity!=null) {
+                                LightnessControl.SetLightness(activity, 0);
+                            }
                         } else {
-                            LightnessControl.SetLightness((Activity) context, mLight - 10);
+                            if(activity!=null) {
+                                LightnessControl.SetLightness(activity, mLight - 10);
+                            }
                         }
                     }
                 } else if (mLight < 0) {
-                    LightnessControl.SetLightness((Activity) context, 0);
+                    if(activity!=null) {
+                        LightnessControl.SetLightness(activity, 0);
+                    }
                 } else {
-                    LightnessControl.SetLightness((Activity) context, 255);
+                    if(activity!=null) {
+                        LightnessControl.SetLightness(activity, 255);
+                    }
                 }
                 //获取当前亮度
-                int currentLight = LightnessControl.GetLightness((Activity) context);
+                int currentLight = LightnessControl.GetLightness(context);
                 int percentage = (currentLight * 100) / 255;
                 geture_tv_light_percentage.setText(String.valueOf(percentage + "%"));
             }
@@ -869,10 +887,11 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
      * @param url   视频地址
      * @param title 视频标题
      */
-    public void setDataSource(String url, String title) {
+    public void setDataSource(Activity activity, String url, String title) {
         //赋值
-        videoPath = url;
-        videoTitle = title;
+        this.activity=activity;
+        this.videoPath = url;
+        this.videoTitle = title;
     }
 
     /**

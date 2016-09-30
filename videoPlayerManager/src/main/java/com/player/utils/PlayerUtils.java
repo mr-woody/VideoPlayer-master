@@ -1,10 +1,10 @@
 package com.player.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.DisplayMetrics;
+import android.view.WindowManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,9 +45,10 @@ public class PlayerUtils {
      *
      * @return 宽度
      */
-    public static int getScreenWidth(Activity activity) {
+    public static int getScreenWidth(Context context) {
         DisplayMetrics dm = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        wm.getDefaultDisplay().getMetrics(dm);
         int screenWidth = dm.widthPixels;
         return screenWidth;
     }
@@ -57,9 +58,10 @@ public class PlayerUtils {
      *
      * @return 高度
      */
-    public static int getScreenHeight(Activity activity) {
+    public static int getScreenHeight(Context context) {
         DisplayMetrics dm = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        wm.getDefaultDisplay().getMetrics(dm);
         int screenHeight = dm.heightPixels;
         return screenHeight;
     }
