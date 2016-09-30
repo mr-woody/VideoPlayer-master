@@ -1,6 +1,1 @@
-# TitleBar-master
-# SwipeCardsView-master
-# SwipeCardsView-master
-# SwipeCardsView-master
-# SwipeCardsView-master
-# SwipeCardsView-master
+# VideoPlayer-master
