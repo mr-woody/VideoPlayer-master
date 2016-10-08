@@ -45,7 +45,8 @@ import tv.danmaku.ijk.media.player.IMediaPlayer;
 
 /**
  * Created by woodys on 16/6/14.
- * 播放器
+ *
+ * 播放器(需要说明的是单个播放,需要放在activity,列表播放需要new 对象的方法)
  */
 public class IjkViderPlayer extends FrameLayout implements View.OnClickListener, SeekBar.OnSeekBarChangeListener,
         GestureDetector.OnGestureListener, IMediaPlayer.OnCompletionListener,
@@ -114,6 +115,9 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
     public IjkViderPlayer(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
+        if(context instanceof Activity) {
+            this.activity = (Activity) context;
+        }
         //自定义属性相关
         initAttrs(context, attrs);
         //其他
@@ -367,9 +371,11 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
                 }
             }
         } else if (i == R.id.mn_player_ll_error || i == R.id.mn_player_ll_net || i == R.id.mn_player_iv_play_center) {
-            if(onStartListener!=null)
+            if(onStartListener!=null) {
                 onStartListener.onClick(v);
-            playVideo(videoPath, videoTitle, 0);
+            }else {
+                playVideo(videoPath, videoTitle, 0);
+            }
         }
     }
 
@@ -882,19 +888,6 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
     //--------------------------------------------------------------------------------------
 
     /**
-     * 设置视频信息
-     *
-     * @param url   视频地址
-     * @param title 视频标题
-     */
-    public void setDataSource(Activity activity, String url, String title) {
-        //赋值
-        this.activity=activity;
-        this.videoPath = url;
-        this.videoTitle = title;
-    }
-
-    /**
      * 播放视频
      *
      * @param url   视频地址
@@ -1239,7 +1232,7 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
      *
      * @param onClickListener 开始按钮点击的回调函数 | Click the Start button callback function
      */
-    public void setStartListener(OnClickListener onClickListener) {
+    public void setOnStartListener(OnClickListener onClickListener) {
         this.onStartListener = onClickListener;
     }
 

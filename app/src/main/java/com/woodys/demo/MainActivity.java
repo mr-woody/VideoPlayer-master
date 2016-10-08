@@ -33,12 +33,16 @@ public class MainActivity extends AppCompatActivity {
     private void initPlayer() {
         // init player
 
-
         //初始化相关参数(必须放在Play前面)
         viderPlayer.setIsNeedBatteryListen(true);
         viderPlayer.setIsNeedNetChangeListen(true);
-        //第一次进来先设置数据
-        viderPlayer.setDataSource(this,url1, "测试视频地址");
+
+        viderPlayer.setOnStartListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viderPlayer.playVideo(url1, "视频地址");
+            }
+        });
 /*
 
         //播放完成监听
