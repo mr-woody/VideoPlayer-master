@@ -12,6 +12,33 @@
         android:layout_height="200dp"
         android:background="#363636" />
 
+    <RelativeLayout
+        android:id="@+id/card_top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_video_cover"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="fitXY"
+            android:background="#30000000"/>
+
+        <ImageView
+            android:id="@+id/iv_video_play"
+            android:layout_width="90dp"
+            android:layout_height="60dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/mn_player_center_play" />
+
+        <FrameLayout
+            android:id="@+id/fl_video"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:visibility="invisible"/>
+
+    </RelativeLayout>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

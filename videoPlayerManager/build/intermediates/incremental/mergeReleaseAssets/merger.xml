@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/Users/ldfs/workSpace/wxrd_v1.10/videoPlayerManager/src/main/assets"/><source path="/Users/ldfs/workSpace/wxrd_v1.10/videoPlayerManager/build/generated/assets/shaders/release"/></dataSet><dataSet config="release"><source path="/Users/ldfs/workSpace/wxrd_v1.10/videoPlayerManager/src/release/assets"/></dataSet></merger>
