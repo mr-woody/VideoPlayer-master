@@ -241,10 +241,13 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
                         }
                         //添加播放路径
                         try {
-
-                            mediaPlayer.setVideoPath(videoPath);
-                            // 准备开始,异步准备，自动在子线程中
-                            mediaPlayer.start();
+                            if(null==onStartListener) {
+                                mediaPlayer.setVideoPath(videoPath);
+                                // 准备开始,异步准备，自动在子线程中
+                                mediaPlayer.start();
+                            }else{
+                                onStartListener.onStart(mediaPlayer);
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -372,7 +375,7 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
             }
         } else if (i == R.id.mn_player_ll_error || i == R.id.mn_player_ll_net || i == R.id.mn_player_iv_play_center) {
             if(onStartListener!=null) {
-                onStartListener.onClick(v);
+                onStartListener.onStart(mediaPlayer);
             }else {
                 playVideo(videoPath, videoTitle, 0);
             }
@@ -1225,15 +1228,19 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
         this.mOnScreenConfigurationListener = onScreenConfigurationListener;
     }
 
-    private OnClickListener onStartListener;
+    private OnStartListener onStartListener;
     /**
      * <p>有特殊需要的客户端</p>
      * <p>Clients with special needs</p>
      *
-     * @param onClickListener 开始按钮点击的回调函数 | Click the Start button callback function
+     * @param listener 自动播放或者点击播放的回调函数 | Click the Start button callback function
      */
-    public void setOnStartListener(OnClickListener onClickListener) {
-        this.onStartListener = onClickListener;
+    public void setOnStartListener(OnStartListener listener) {
+        this.onStartListener = listener;
+    }
+
+    public interface OnStartListener {
+        void onStart(IjkVideoView ijkVideoView);
     }
 
     public interface OnCompletionListener {

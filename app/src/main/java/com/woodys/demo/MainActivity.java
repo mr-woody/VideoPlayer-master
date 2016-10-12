@@ -67,12 +67,14 @@ public class MainActivity extends AppCompatActivity {
         viderPlayer.setIsNeedBatteryListen(true);
         viderPlayer.setIsNeedNetChangeListen(true);
 
-        viderPlayer.setOnStartListener(new View.OnClickListener() {
+        viderPlayer.setOnStartListener(new IjkViderPlayer.OnStartListener() {
             @Override
-            public void onClick(View v) {
+            public void onStart(IjkVideoView ijkVideoView) {
                 viderPlayer.playVideo(url1, "视频地址");
             }
         });
+
+
 /*
 
         //播放完成监听
