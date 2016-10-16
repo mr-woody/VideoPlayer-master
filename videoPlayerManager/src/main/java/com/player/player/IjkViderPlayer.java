@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -137,52 +138,63 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
         //销毁
         typedArray.recycle();
     }
+    public void setActivity(Activity activity){
+        this.activity = activity;
+    }
+    /**
+     * 是否显示全屏控制器
+     *
+     * @param isShow
+     *            true ： 显示 false ： 不显示
+     */
+    public IjkViderPlayer showFullScreenControl(boolean isShow) {
+        mn_iv_fullScreen.setVisibility(isShow?View.VISIBLE:View.GONE);
+        return this;
+    }
+
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        int screenWidth = PlayerUtils.getScreenWidth(context);
-        int screenHeight = PlayerUtils.getScreenHeight(context);
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) getLayoutParams();
-
+    public void onConfigurationChanged(Configuration config) {
+        super.onConfigurationChanged(config);
         if(mOnScreenConfigurationListener!=null){
-            mOnScreenConfigurationListener.onChanged(newConfig);
+            mOnScreenConfigurationListener.onChanged(config);
         }
-
-        //newConfig.orientation获得当前屏幕状态是横向或者竖向
         //Configuration.ORIENTATION_PORTRAIT 表示竖向
         //Configuration.ORIENTATION_LANDSCAPE 表示横屏
-        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            if(activity!=null) {
-                activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            }
+        int screenWidth = PlayerUtils.getScreenWidth(context);
+        int screenHeight = PlayerUtils.getScreenHeight(context);
+        ViewGroup.LayoutParams layoutParams = getLayoutParams();
+        setFullScreen(config.orientation == Configuration.ORIENTATION_LANDSCAPE);
+        if (config.orientation == Configuration.ORIENTATION_PORTRAIT) {
             //计算视频的大小16：9
             layoutParams.width = screenWidth;
             layoutParams.height = screenWidth * 9 / 16;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                setX(mediaPlayerX);
-                setY(mediaPlayerY);
-            }else{
-                layoutParams.leftMargin = (int) mediaPlayerX; //Your Y coordinate
-                layoutParams.topMargin = (int) mediaPlayerY; //Your Y coordinate
-            }
-        }
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if(activity!=null) {
-                activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            }
+            requestLayout();
+        } else {
             layoutParams.width = screenWidth;
             layoutParams.height = screenHeight;
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                setX(0);
-                setY(0);
-            }else{
-                layoutParams.leftMargin = 0; //Your Y coordinate
-                layoutParams.topMargin = 0; //Your Y coordinate
-            }
         }
         setLayoutParams(layoutParams);
+
+    }
+
+    private void setFullScreen(boolean fullScreen) {
+        if (activity != null) {
+            WindowManager.LayoutParams attrs = activity.getWindow()
+                    .getAttributes();
+            if (fullScreen) {
+                attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+                activity.getWindow().setAttributes(attrs);
+                activity.getWindow().addFlags(
+                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            } else {
+                attrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                activity.getWindow().setAttributes(attrs);
+                activity.getWindow().clearFlags(
+                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+            }
+        }
+
     }
 
     //初始化
@@ -438,7 +450,7 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
     private void setLandscape() {
         isFullscreen = true;
         //设置横屏
-        if(activity!=null) {
+        if(activity != null) {
             activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
         if (mn_rl_bottom_menu.getVisibility() == View.VISIBLE) {
@@ -987,16 +999,29 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
     }
 
     /**
+     * 视频退出判断
+     * @return
+     */
+    public boolean onBackPressed() {
+        if (isFullScreen()) {
+            setOrientationPortrait();
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
      * 竖屏
      */
-    public void setOrientationPortrait() {
+    private void setOrientationPortrait() {
         setProtrait();
     }
 
     /**
      * 横屏
      */
-    public void setOrientationLandscape() {
+    private void setOrientationLandscape() {
         setLandscape();
     }
 
@@ -1019,7 +1044,7 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
      *
      * @return
      */
-    public boolean isFullScreen() {
+    private boolean isFullScreen() {
         return isFullscreen;
     }
 
@@ -1220,13 +1245,7 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
         this.onCompletionListener = onCompletionListener;
     }
 
-    /**
-     * 横竖屏变化监听
-     * @param onScreenConfigurationListener
-     */
-    public void setOnScreenConfigurationListener(OnScreenConfigurationListener onScreenConfigurationListener) {
-        this.mOnScreenConfigurationListener = onScreenConfigurationListener;
-    }
+
 
     private OnStartListener onStartListener;
     /**
@@ -1247,8 +1266,16 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
         void onCompletion(IMediaPlayer mediaPlayer);
     }
 
-    public interface OnScreenConfigurationListener{
+    public interface OnScreenConfigurationListener {
         void onChanged(Configuration config);
+    }
+
+    /**
+     * 横竖屏变化监听
+     * @param onScreenConfigurationListener
+     */
+    public void setOnScreenConfigurationListener(OnScreenConfigurationListener onScreenConfigurationListener) {
+        this.mOnScreenConfigurationListener = onScreenConfigurationListener;
     }
 
 }

@@ -33,7 +33,7 @@ public class LightnessControl {
             lp.screenBrightness = (value <= 0 ? 1 : value) / 255f;
             act.getWindow().setAttributes(lp);
         } catch (Exception e) {
-//            Toast.makeText(act, "无法改变亮度", Toast.LENGTH_SHORT).show();
+            Toast.makeText(act, "无法改变亮度", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.player.media.IjkVideoView;
@@ -25,9 +25,11 @@ public class MainActivity extends AppCompatActivity {
     private IjkViderPlayer viderPlayer;
 
     private IjkViderPlayer viderPlayer2;
-    public FrameLayout videoLayout;
+    public LinearLayout videoLayout;
     public ImageView videoCover;
     public ImageView videPlay;
+
+    public LinearLayout ll_content;
 
 
     @Override
@@ -37,7 +39,9 @@ public class MainActivity extends AppCompatActivity {
 
         viderPlayer = (IjkViderPlayer) findViewById(R.id.ijk_videoplayer);
 
-        videoLayout = (FrameLayout) findViewById(R.id.fl_video);
+        ll_content = (LinearLayout) findViewById(R.id.ll_content);
+
+        videoLayout = (LinearLayout) findViewById(R.id.fl_video);
         videoCover = (ImageView) findViewById(R.id.iv_video_cover);
         videPlay = (ImageView) findViewById(R.id.iv_video_play);
 
@@ -62,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void initPlayer() {
         // init player
-
         //初始化相关参数(必须放在Play前面)
         viderPlayer.setIsNeedBatteryListen(true);
         viderPlayer.setIsNeedNetChangeListen(true);
@@ -73,8 +76,6 @@ public class MainActivity extends AppCompatActivity {
                 viderPlayer.playVideo(url1, "视频地址");
             }
         });
-
-
 /*
 
         //播放完成监听
@@ -116,6 +117,13 @@ public class MainActivity extends AppCompatActivity {
         //初始化相关参数(必须放在Play前面)
         viderPlayer2.setIsNeedBatteryListen(true);
         viderPlayer2.setIsNeedNetChangeListen(true);
+
+        viderPlayer2.setOnStartListener(new IjkViderPlayer.OnStartListener() {
+            @Override
+            public void onStart(IjkVideoView ijkVideoView) {
+                viderPlayer2.playVideo(url2, "视频地址");
+            }
+        });
 
         //播放完成监听
         viderPlayer2.setOnCompletionListener(new IjkViderPlayer.OnCompletionListener() {
@@ -163,8 +171,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (viderPlayer.isFullScreen()) {
-            viderPlayer.setOrientationPortrait();
+        if (null!=viderPlayer && viderPlayer.onBackPressed()) {
             return;
         }
         super.onBackPressed();
