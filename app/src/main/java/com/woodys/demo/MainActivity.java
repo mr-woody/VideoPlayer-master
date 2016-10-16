@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         viderPlayer2.setOnStartListener(new IjkViderPlayer.OnStartListener() {
             @Override
             public void onStart(IjkVideoView ijkVideoView) {
-                viderPlayer2.playVideo(url2, "视频地址");
+                viderPlayer2.playVideo("http://file.weixinkd.com/o_1att18nuovp11aet13ff11bdif29.mp4", "视频地址");
             }
         });
 
