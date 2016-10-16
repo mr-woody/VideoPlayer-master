@@ -33,7 +33,7 @@
 
         <ImageView
             android:id="@+id/mn_iv_fullScreen"
-            android:layout_width="60dp"
+            android:layout_width="40dp"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
@@ -44,6 +44,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:paddingRight="15dp"
+            android:layout_alignWithParentIfMissing="true"
             android:layout_toLeftOf="@id/mn_iv_fullScreen"
             android:text="00:00 / 00:00"
             android:textColor="@color/colorPlayerWhite" />
