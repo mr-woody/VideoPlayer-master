@@ -199,7 +199,7 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
 
     //初始化
     private void init() {
-        View inflate = View.inflate(context, R.layout.player_view, this);
+        View inflate = View.inflate(context, R.layout.mn_player_view, this);
         mn_rl_bottom_menu = (RelativeLayout) inflate.findViewById(R.id.mn_rl_bottom_menu);
         mediaPlayer = (IjkVideoView) inflate.findViewById(R.id.mn_palyer);
         mn_iv_play_pause = (ImageView) inflate.findViewById(R.id.mn_iv_play_pause);
