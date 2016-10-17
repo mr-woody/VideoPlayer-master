@@ -141,16 +141,7 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
     public void setActivity(Activity activity){
         this.activity = activity;
     }
-    /**
-     * 是否显示全屏控制器
-     *
-     * @param isShow
-     *            true ： 显示 false ： 不显示
-     */
-    public IjkViderPlayer showFullScreenControl(boolean isShow) {
-        mn_iv_fullScreen.setVisibility(isShow?View.VISIBLE:View.GONE);
-        return this;
-    }
+
 
 
     @Override
@@ -999,6 +990,38 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
     }
 
     /**
+     * 重置视频
+     */
+    public void resetVideo() {
+        if (mediaPlayer != null) {
+            mediaPlayer.reset(true);
+
+            destroyControllerTask(true);
+
+
+            mn_tv_system_time.setText(PlayerUtils.getCurrentHHmmTime());
+            mn_rl_bottom_menu.setVisibility(View.GONE);
+            mn_rl_top_menu.setVisibility(View.GONE);
+            mn_player_iv_lock.setVisibility(View.GONE);
+            initLock();
+            mn_player_rl_progress.setVisibility(View.VISIBLE);
+            gesture_progress_layout.setVisibility(View.GONE);
+            mn_player_progressBar.setVisibility(View.GONE);
+
+            mn_player_ll_error.setVisibility(View.GONE);
+            mn_player_ll_net.setVisibility(View.GONE);
+            mn_player_iv_play_center.setVisibility(View.VISIBLE);
+            initTopMenu();
+
+            mn_iv_play_pause.setImageResource(R.drawable.mn_player_play);
+            video_position = 0;
+            mn_thumb.setVisibility(View.VISIBLE);
+        }
+    }
+
+
+
+    /**
      * 视频退出判断
      * @return
      */
@@ -1089,6 +1112,18 @@ public class IjkViderPlayer extends FrameLayout implements View.OnClickListener,
         destroyTimeTask();
         myHandler.removeCallbacksAndMessages(null);
     }
+
+    /**
+     * 是否显示全屏控制器
+     *
+     * @param isShow
+     *            true ： 显示 false ： 不显示
+     */
+    public IjkViderPlayer showFullScreenControl(boolean isShow) {
+        mn_iv_fullScreen.setVisibility(isShow?View.VISIBLE:View.GONE);
+        return this;
+    }
+
 
 
 

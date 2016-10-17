@@ -737,6 +737,16 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
         }
     }
 
+    public void reset(boolean cleartstate) {
+        if (mMediaPlayer != null)
+            mMediaPlayer.stop();
+            mMediaPlayer.reset();
+            mCurrentState = STATE_IDLE;
+            if (cleartstate) {
+                mTargetState = STATE_IDLE;
+            }
+    }
+
     /**
      * 销毁资源
      */
@@ -1281,7 +1291,7 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
      */
     public Bitmap getBitmap(){
         if (mRenderView!=null){
-            if (mRenderView instanceof TextureRenderView&&mMediaPlayer!=null)
+            if (mRenderView instanceof TextureRenderView &&mMediaPlayer!=null)
                 return ((TextureRenderView) mRenderView).getBitmap(mMediaPlayer.getVideoWidth(),mMediaPlayer.getVideoHeight());
         }
         return null;
